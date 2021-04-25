@@ -2,9 +2,11 @@
 const canvas = document.getElementById('juego');
 const context = canvas.getContext('2d');
 const nave = new Image();
-nave.src = './images/nave1.png';
+nave.src = './images/imagen1.png';
 const espacio = new Image();
-espacio.src = './images/espacio.jpg';
+espacio.src = './images/imagen4.jpg';
+const disparo = new Image();
+disparo.src = "./images/disparo_bueno.png"
 
 
 
@@ -27,19 +29,6 @@ const Bg = {
 }
 
 //Shot
-function Shot(x, y, array, img) {
-    this.x = x;
-    this.x = y;
-    this.image = img;
-    this.speed = shotSpeed;
-    this.identifier = 0;
-    this.add = function() {
-        array.push(this);
-    };
-    this.deleteShot = function(idendificador) {
-        arrayRemove(array, idendificador);
-    };
-}
 
 
 
@@ -48,13 +37,14 @@ function Shot(x, y, array, img) {
 
 //Jugador
 const player = {
-    height: 80,
-    width: 80,
+    height: 100,
+    width: 100,
     x: 550,
     y: 440,
     dx: 0,
     dy: 0,
     speed: 20,
+
 
 
     imagenes() {
@@ -74,7 +64,23 @@ const player = {
 
         }
 
+    },
+
+
+}
+
+const shoot = {
+    height: 15,
+    width: 15,
+    x: 550,
+    y: 390,
+
+    imagen() {
+
+        context.drawImage(disparo, 585, 390, 15, 15);
+
     }
+
 
 }
 
@@ -111,7 +117,7 @@ const startGame = () => {
     Bg.move();
     Bg.draw();
 
-
+    shoot.imagen();
     player.imagenes();
     player.newPos();
     player.detectWalls();
