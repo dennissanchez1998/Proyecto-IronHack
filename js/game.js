@@ -430,11 +430,10 @@ function disparaEnemigo() {
 }
 
 
-/* startGame(); */
-
-window.onload(() => {
-
-    alert("paso primero por aqui")
+startGame();
+window.onload = function() {
 
 
-})
+    console.log("entro primro por aqui");
+
+}
