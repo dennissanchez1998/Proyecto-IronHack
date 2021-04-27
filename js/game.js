@@ -33,7 +33,7 @@ var teclaDerecha = 39;
 var teclaEspacio = 32;
 var teclaPulsada = null;
 var tecla = [];
-var x = 520;
+var x = 360;
 var y = 100;
 var tiempoBala = true;
 var balas_array = new Array();
@@ -41,7 +41,7 @@ var ovnis_array = new Array();
 var balasEnemigas_array = new Array();
 var disparoEnemigo;
 var enemigosVivos = 50;
-var tiempoDisparo = 400;
+var tiempoDisparo = 1000;
 var id;
 var endGame = false;
 
@@ -123,20 +123,20 @@ function Enemigo(x, y) {
     this.prueba = false;
     this.dibuja = function() {
 
-        if (this.ciclos > 10) {
+        if (this.ciclos > 20) {
             //saltitos
             if (this.veces > this.num) {
                 this.dx *= -1;
                 this.veces = 0;
                 this.num = 5;
-                //  this.y += 40;
+                this.y += 20;
                 this.dx = (this.dx > 0) ? this.dx++ : this.dx--;
             } else {
                 if (this.y >= canvas.height) {
-                    this.y = 0
+                    this.y = 0;
                 }
                 this.x += this.dx;
-                this.y += 5;
+                this.y += 2;
             }
             this.veces++;
             this.ciclos = 0;
@@ -209,9 +209,9 @@ function verifica(boton = false, codigo = 0) {
     if (tecla[teclaIzquierda]) x -= 10;
     //Verifica cañon
 
-    if (x > 1100) {
+    if (x > canvas.width - 80) {
 
-        x = 1100;
+        x = canvas.width - 80;
 
     }
 
@@ -281,11 +281,11 @@ Aparecer OVNIS
 function ovnis() {
 
     if (ovnis_array <= 10) {
-        disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
-        for (var i = 0; i <= 10; i++) {
 
+        for (var i = 0; i <= 8; i++) {
+            disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
             for (var j = 0; j <= 1; j++) {
-                ovnis_array.push(new Enemigo(100 + 80 * i, 10 + 45 * j));
+                ovnis_array.push(new Enemigo(10 + 80 * i, 10 + 55 * j));
 
             }
         }
@@ -306,7 +306,6 @@ const startGame = () => {
         Bg.draw();
         prueba = new player(0);
         prueba.dibuja(x);
-
         ovnis();
         colisiones()
         verifica();
@@ -431,4 +430,11 @@ function disparaEnemigo() {
 }
 
 
-startGame();
+/* startGame(); */
+
+window.onload(() => {
+
+    alert("paso primero por aqui")
+
+
+})
