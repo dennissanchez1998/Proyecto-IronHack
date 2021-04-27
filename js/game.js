@@ -27,6 +27,7 @@ enemigo.src = './images/bichofeo1.png';
 Variables ultilizadas
 **************************
 */
+var ultimos = new Array();
 var teclaIzquierda = 37;
 var teclaDerecha = 39;
 var teclaEspacio = 32;
@@ -37,8 +38,12 @@ var y = 100;
 var tiempoBala = true;
 var balas_array = new Array();
 var ovnis_array = new Array();
+var balasEnemigas_array = new Array();
 var disparoEnemigo;
 var enemigosVivos = 50;
+var tiempoDisparo = 400;
+var id;
+var endGame = false;
 
 
 /* 
@@ -99,20 +104,49 @@ Aqui se crea el enemigo
 
 */
 
+function getRandomNumber(range) {
+    return Math.floor(Math.random() * range);
+}
 
 function Enemigo(x, y) {
     this.x = x;
     this.y = y;
-    this.w = 35;
+    this.w = 60;
     this.veces = 0;
     this.dx = 5;
     this.ciclos = 0;
     this.num = 14;
     this.figura = true;
     this.vive = true;
+    this.speed = 1
+
+    this.prueba = false;
     this.dibuja = function() {
 
-        context.drawImage(enemigo, x, y, 60, 60);
+        if (this.ciclos > 10) {
+            //saltitos
+            if (this.veces > this.num) {
+                this.dx *= -1;
+                this.veces = 0;
+                this.num = 5;
+                //  this.y += 40;
+                this.dx = (this.dx > 0) ? this.dx++ : this.dx--;
+            } else {
+                if (this.y >= canvas.height) {
+                    this.y = 0
+                }
+                this.x += this.dx;
+                this.y += 5;
+            }
+            this.veces++;
+            this.ciclos = 0;
+            this.figura = !this.figura;
+        } else {
+            this.ciclos++;
+        }
+
+
+        context.drawImage(enemigo, this.x, this.y, this.w, this.w);
 
 
     };
@@ -218,13 +252,18 @@ function pinta() {
     for (var i = 0; i < balas_array.length; i++) {
         if (balas_array[i] != null) {
             balas_array[i].dibuja();
+        }
+    }
 
-
+    //Balas Enemigas
+    for (var i = 0; i < balasEnemigas_array.length; i++) {
+        if (balasEnemigas_array[i] != null) {
+            balasEnemigas_array[i].dispara();
+            if (balasEnemigas_array[i].y > canvas.height) balasEnemigas_array[i] = null;
         }
     }
 
     //enemigos
-
     numEnemigos = 0;
     for (var i = 0; i < ovnis_array.length; i++) {
         if (ovnis_array[i] != null) {
@@ -236,7 +275,45 @@ function pinta() {
 
 }
 
+/* 
+Aparecer OVNIS
+*/
+function ovnis() {
 
+    if (ovnis_array <= 10) {
+        disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
+        for (var i = 0; i <= 10; i++) {
+
+            for (var j = 0; j <= 1; j++) {
+                ovnis_array.push(new Enemigo(100 + 80 * i, 10 + 45 * j));
+
+            }
+        }
+
+
+
+
+    }
+
+}
+
+
+//para comenzar el juego
+const startGame = () => {
+
+    if (endGame === false) {
+        Bg.move();
+        Bg.draw();
+        prueba = new player(0);
+        prueba.dibuja(x);
+
+        ovnis();
+        colisiones()
+        verifica();
+        pinta();
+        id = requestAnimationFrame(startGame);
+    }
+}
 
 /* 
 ********************************8
@@ -265,32 +342,92 @@ function colisiones() {
         }
     }
 
+    for (var j = 0; j < balasEnemigas_array.length; j++) {
+        bala3 = balasEnemigas_array[j];
+        if (bala3 != null) {
+            if ((bala3.x >= prueba.x) &&
+                (bala3.x <= prueba.x + prueba.w) &&
+                (bala3.y >= prueba.y) &&
+                (bala3.y <= prueba.y + prueba.h)) {
+                gameOver();
+            }
+        }
+    }
+
+
+
+}
+
+/* 
+**********************
+Mensajes
+**********************
+
+*/
+
+function mensaje(cadena) {
+    var lon = (canvas.width - (50 * cadena.length)) / 2;
+    context.fillStyle = "white";
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.font = "bold 75px Arial";
+    context.fillText(cadena, lon, 220);
 }
 
 
-//para comenzar el juego
-const startGame = () => {
-    Bg.move();
-    Bg.draw();
-    prueba = new player(0);
-    prueba.dibuja(x);
-    /*     enemigo2 = new Enemigo(50, 50);
-        enemigo2.dibuja(); */
+/* 
+****************
+se acaba el juego
+****************
 
-    if (ovnis_array <= 10) {
+*/
 
-        for (var i = 0; i < 5; i++) {
-            for (var j = 0; j < 20; j++) {
-                ovnis_array.push(new Enemigo(100 + 40 * j, 30 + 45 * i));
+function gameOver() {
+    cancelAnimationFrame(id)
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    balas_array = [];
+    ovnis_array = [];
+    balasEnemigas_array = [];
+    if (enemigosVivos == 0) {
+        mensaje("GANASTE");
+    } else {
+        mensaje("GAME OVER");
+    }
+    endGame = true;
+    clearTimeout(disparoEnemigo);
+}
+
+
+/* 
+*****************
+todos los disparo de enemigo
+*****************
+*/
+
+function disparaEnemigo() {
+    for (var i = ovnis_array.length - 1; i > 0; i--) {
+        if (ovnis_array[i] != null) {
+            ultimos.push(i);
+        }
+        if (ultimos.length >= 10) break;
+    }
+    Array.prototype.clean = function(deleteValue) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] == deleteValue) {
+                this.splice(i, 1);
+                i--;
             }
         }
-
+        return this;
+    };
+    ovnis_array.clean(undefined);
+    d = ultimos[Math.floor(Math.random() * ovnis_array.length)];
+    if (ovnis_array[d] == null || d == null) {
+        ovnis_array.clean(undefined);
+        d = Math.floor(Math.random() * ovnis_array.length);
     }
-    colisiones()
-    verifica();
-    pinta();
-    requestAnimationFrame(startGame);
-
+    balasEnemigas_array.push(new Bala(ovnis_array[d].x + ovnis_array[d].w / 2, ovnis_array[d].y, 5));
+    clearTimeout(disparoEnemigo);
+    disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
 }
 
 
