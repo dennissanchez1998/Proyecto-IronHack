@@ -9,7 +9,7 @@ Constatentes ultilizadas
 
 const canvas = document.getElementById('juego');
 const context = canvas.getContext('2d');
-const nave = new Image();
+let nave = new Image();
 nave.src = './images/imagen2.png';
 const espacio = new Image();
 espacio.src = './images/imagen4.jpg';
@@ -44,6 +44,8 @@ var enemigosVivos = 50;
 var tiempoDisparo = 1000;
 var id;
 var endGame = false;
+var totalBestScoresToShow = 5;
+var puntos = 0;
 
 
 /* 
@@ -173,7 +175,7 @@ function Bala(x, y, w) {
     this.dispara = function() {
         context.save();
         context.fillStyle = "red";
-        context.fillRect(this.x, this.y, this.w, this.w);
+        context.fillRect(this.x, this.y, this.w, 20);
         this.y = this.y + 4;
         context.restore();
     };
@@ -247,7 +249,7 @@ Pinta las balas y el enemigo
 */
 
 function pinta() {
-
+    score();
     //Balas
     for (var i = 0; i < balas_array.length; i++) {
         if (balas_array[i] != null) {
@@ -283,11 +285,12 @@ function ovnis() {
     if (ovnis_array <= 10) {
 
         for (var i = 0; i <= 8; i++) {
-            disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
+
             for (var j = 0; j <= 1; j++) {
                 ovnis_array.push(new Enemigo(10 + 80 * i, 10 + 55 * j));
 
             }
+            disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
         }
 
 
@@ -298,18 +301,38 @@ function ovnis() {
 }
 
 
+/* 
+**********************
+Pinta el score en la pantalla
+**********************
+
+*/
+
+function score() {
+    context.save();
+    context.fillStyle = "white";
+
+    context.font = "bold 20px Courier";
+    context.fillText("SCORE: " + puntos, 660, 520);
+    context.restore();
+}
+
+
+
 //para comenzar el juego
 const startGame = () => {
 
     if (endGame === false) {
         Bg.move();
         Bg.draw();
+
         prueba = new player(0);
         prueba.dibuja(x);
         ovnis();
         colisiones()
         verifica();
         pinta();
+
         id = requestAnimationFrame(startGame);
     }
 }
@@ -335,7 +358,7 @@ function colisiones() {
                     ovnis_array[i] = null;
                     balas_array[j] = null;
 
-
+                    puntos += 5;
                 }
             }
         }
@@ -381,8 +404,8 @@ se acaba el juego
 */
 
 function gameOver() {
-    cancelAnimationFrame(id)
     context.clearRect(0, 0, canvas.width, canvas.height);
+    saveFinalScore()
     balas_array = [];
     ovnis_array = [];
     balasEnemigas_array = [];
@@ -429,11 +452,241 @@ function disparaEnemigo() {
     disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
 }
 
+/* 
+startGame(); */
 
-startGame();
-window.onload = function() {
 
 
-    console.log("entro primro por aqui");
 
+var game = {
+
+    showLevelScreen: function() {
+
+
+        let naves = document.getElementById('naves')
+        let start = document.getElementsByClassName("start");
+
+        let inicio = document.getElementById('inicio')
+
+        start[0].style.display = "none"
+
+
+
+        naves.style.display = "block"
+    },
+
+
+    nave: function(event) {
+        let juego = document.getElementsByClassName("div-juego");
+
+        let naves = event.toElement.alt;
+        console.log(naves)
+        switch (naves) {
+            case "NLO":
+                nave.src = './images/imagen1.png';
+                inicio.style.display = "none";
+                juego[0].classList.remove('div-juego');
+
+
+                startGame();
+
+                break;
+            case "NLO2":
+                nave.src = './images/imagen2.png';
+                inicio.style.display = "none";
+                juego[0].classList.remove('div-juego');
+                startGame();
+                break;
+            case "NLO3":
+                nave.src = './images/imagen3.png';
+                inicio.style.display = "none";
+                juego[0].classList.remove('div-juego');
+                console.log(juego);
+                startGame();
+                break;
+
+
+        }
+    },
+
+
+
+}
+
+
+/* 
+**********************
+Mejores puntuaciones
+**********************
+
+*/
+
+
+/* 
+*************************
+te devuelve la puntuacion total
+************************
+
+*/
+function getTotalScore() {
+    return puntos;
+}
+
+
+/* 
+***************************
+guarda la puntuacion final
+***************************
+*/
+
+function saveFinalScore() {
+    localStorage.setItem(getFinalScoreDate(), getTotalScore());
+    showBestScores();
+    removeNoBestScores();
+}
+
+/* 
+***********************8
+Realiza la fecha de la puntuacion final
+**********************
+*/
+
+function getFinalScoreDate() {
+    var date = new Date();
+    return fillZero(date.getDay() + 1) + '/' +
+        fillZero(date.getMonth() + 1) + ' ' +
+        fillZero(date.getHours()) + ':' +
+        fillZero(date.getMinutes()) + ' ';
+}
+
+/* 
+*******************8
+agrega un cero al principio si la puntuacion es menor a 10
+******************
+
+*/
+
+function fillZero(number) {
+    if (number < 10) {
+        return '0' + number;
+    }
+    return number;
+}
+
+/* 
+***********************
+Funcion que trae los mejores scroes guardados en localstorage
+********************
+
+*/
+
+function getBestScoreKeys() {
+    var bestScores = getAllScores();
+    bestScores.sort(function(a, b) { return b - a; });
+    bestScores = bestScores.slice(0, totalBestScoresToShow);
+    var bestScoreKeys = [];
+    for (var j = 0; j < bestScores.length; j++) {
+        var score = bestScores[j];
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (parseInt(localStorage.getItem(key)) == score) {
+                bestScoreKeys.push(key);
+            }
+        }
+    }
+    return bestScoreKeys.slice(0, totalBestScoresToShow);
+}
+
+
+/* 
+**********************
+Trae todos los los puntuajes guardado en local sotre
+*************************
+*/
+
+function getAllScores() {
+    var all = [];
+    for (var i = 0; i < localStorage.length; i++) {
+        all[i] = (localStorage.getItem(localStorage.key(i)));
+    }
+    return all;
+}
+
+/* 
+****************************
+Muesta los mejores resultador en el html
+***************************
+*/
+
+function showBestScores() {
+    var bestScores = getBestScoreKeys();
+    var bestScoresList = document.getElementById('puntuaciones');
+    if (bestScoresList) {
+        clearList(bestScoresList);
+        for (var i = 0; i < bestScores.length; i++) {
+            addListElement(bestScoresList, bestScores[i], i == 0 ? 'negrita' : null);
+            addListElement(bestScoresList, localStorage.getItem(bestScores[i]), i == 0 ? 'negrita' : null);
+        }
+    }
+}
+
+/* 
+***********************
+crea la lista en el html
+**********************
+
+*/
+
+function clearList(list) {
+    list.innerHTML = '';
+    addListElement(list, "Fecha");
+    addListElement(list, "Puntos");
+}
+
+/* 
+****************************8
+Agg las clases de ser necesarias
+***************************
+*/
+
+
+function addListElement(list, content, className) {
+    var element = document.createElement('li');
+    if (className) {
+        element.setAttribute("class", className);
+    }
+    element.innerHTML = content;
+    list.appendChild(element);
+}
+
+// extendemos el objeto array con un metodo "containsElement"
+Array.prototype.containsElement = function(element) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] == element) {
+            return true;
+        }
+    }
+    return false;
+};
+
+/* 
+********************************
+verifica si el puntuaje actual supera algunos de los resultados anterioes y lo elimina
+*******************************
+*/
+
+
+function removeNoBestScores() {
+    var scoresToRemove = [];
+    var bestScoreKeys = getBestScoreKeys();
+    for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (!bestScoreKeys.containsElement(key)) {
+            scoresToRemove.push(key);
+        }
+    }
+    for (var j = 0; j < scoresToRemove.length; j++) {
+        var scoreToRemoveKey = scoresToRemove[j];
+        localStorage.removeItem(scoreToRemoveKey);
+    }
 }

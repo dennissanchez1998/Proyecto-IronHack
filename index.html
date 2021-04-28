@@ -30,7 +30,7 @@
 
                 <h5 class="controles__header">Mover</h5>
                 <div class="gameRules__text">
-                    <img src="./images/space.gif" alt="" style="width: 70px;">
+                    <img src="./images/flechas.png" alt="" style="width: 70px;">
                     <img src="" alt="">
 
                 </div>
@@ -46,18 +46,61 @@
 
 
             <div class="gameRules right">
-                <h3 class="gameRules__header">Rules of the game</h3>
-                <p class="gameRules__text">
-                    You are a spaceship pilot. You must try to destroy all the falling meteorites, while keeping your ship.Each collision of a ship with meteorite will reduce its protection. For each shot down a meteor you will receive points. <br/><br/>                    The game will end when you destroy the required number of meteorites, or lose your ship. The number of meteorites in each level is different and depends on the level of complexity. If you think that the game is too easy for you, you
-                    can change the difficulty level in the settings. <br/><br/> To start playing you need to choose one of the ships, each of which has its own characteristics. They have different levels of protection, armor and weapons. In the game you
-                    need to use only the mouse to move the ship in space.
-                </p>
+                <h3 class="gameRules__header2">SCORE</h3>
+                <div class="derecha">
+                    <h3 class="tituloPuntuaciones"></h3>
+                    <ul id="puntuaciones"></ul>
+                </div>
+            </div>
+
+        </div>
+        <div id="inicio">
+            <div class="portada">
+                <div>
+                    <img src="./images/logo.png" alt="">
+
+                </div>
+            </div>
+
+            <div class="start">
+
+                <img src="./images/botonstart.png" alt="" style="height: 150px;" onclick="game.showLevelScreen()">
+
+            </div>
+
+            <div id="naves" class="inactivo">
+                <div class="ships">
+
+                    <img src="./images/imagen1.png" alt="NLO" class="nave1" id="nave1" onclick="game.nave(event)">
+
+                    <img src="./images/imagen2.png" alt="NLO2" class="nave2" id="nave2" onclick="game.nave(event)">
+
+                    <img src="./images/imagen3.png" alt="NLO3" class="nave3" id="nave3" onclick="game.nave(event)">
+
+                </div>
+
+                <div class="advantages">
+                    <div class="advantages__block">
+                        <h5 class=" controles__header">Nave 1</h5>
+
+                    </div>
+                    <div class="advantages__block">
+                        <h5 class=" controles__header">Nave 2</h5>
+
+                    </div>
+                    <div class="advantages__block">
+                        <h5 class=" controles__header">Nave 3</h5>
+
+                    </div>
+
+
+                </div>
             </div>
 
         </div>
 
-        <div class="div-juego">
-            <canvas id="juego" height="540" width="800"></canvas>
+        <div class="div-juego" id="CanvasJuego">
+            <canvas id="juego" height="560" width="800"></canvas>
         </div>
 
 

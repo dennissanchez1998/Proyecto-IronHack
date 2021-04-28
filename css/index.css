@@ -2,10 +2,11 @@
         height: inherit;
         background: #000900;
         background-image: url("../images/fon2.jpeg");
-        background-size: cover;
+        background-size: auto;
         background-position: center;
         font-family: Arial, Helvetica, sans-serif;
         user-select: none;
+        height: 110%;
     }
     
     canvas {
@@ -23,6 +24,11 @@
     
     .div-juego {
         margin-top: 1%;
+        display: none;
+    }
+    
+    .inactivo {
+        display: none;
     }
     
     .reglas {
@@ -52,11 +58,22 @@
         margin-bottom: 1rem;
     }
     
+    .gameRules__header2 {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        color: darkred;
+        text-shadow: 0 0 3px white;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        margin-bottom: 1rem;
+    }
+    
     .controles__header {
         text-align: center;
         font-size: 15px;
         font-weight: bold;
-        color: darkred;
+        color: white;
         text-shadow: 0 0 3px white;
         text-transform: uppercase;
         letter-spacing: 5px;
@@ -81,4 +98,118 @@
     
     .controles {
         display: flex;
+    }
+    
+    .puntuaciones {
+        color: white;
+    }
+    
+    div.derecha ul#puntuaciones {
+        margin-left: -20%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: white;
+    }
+    
+    div.derecha {
+        float: right;
+    }
+    
+    div.derecha h3.tituloPuntuaciones {
+        background: url("../images/medalla.png") no-repeat left;
+        padding: 10px;
+    }
+    
+    div.derecha ul#puntuaciones {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    
+    div.derecha ul#puntuaciones li {
+        line-height: 1.5em;
+        border-bottom: 1px solid #aaa;
+        float: left;
+        display: inline;
+        width: 100px;
+        padding: 10px 0;
+    }
+    
+    .negrita {
+        font-weight: bold;
+    }
+    
+    ul.lista {
+        margin: 24px 0;
+        padding: 0;
+        list-style: none;
+        text-align: left;
+    }
+    
+    ul.lista li {
+        padding: 10px 0;
+    }
+    
+    .portada {
+        height: 20%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .portada img {
+        height: 60%;
+        padding-left: 20%;
+    }
+    
+    .start {
+        height: 10%;
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        margin-top: -12%;
+    }
+    
+    .ships {
+        display: flex;
+        margin-top: -12%;
+        justify-content: space-around;
+    }
+    
+    .ships img {
+        width: 150px;
+    }
+    /*    .ships img:hover {
+        width: 200px;
+    } */
+    
+    .nave1:hover {
+        box-shadow: 1px 1px 80px darkred;
+        border-radius: 300px;
+        width: 160px;
+    }
+    
+    .nave2:hover {
+        box-shadow: 1px 1px 80px darkred;
+        border-radius: 300px;
+        width: 160px;
+    }
+    
+    .nave3:hover {
+        box-shadow: 1px 1px 80px darkred;
+        border-radius: 300px;
+        width: 160px;
+    }
+    
+    .advantages {
+        display: flex;
+        justify-content: space-around;
+    }
+    
+    .advantages__block>p {
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        color: red;
+        text-shadow: 1px 1px 2px black;
+        background: rgba(151, 151, 151, 0.5);
     }
