@@ -58,7 +58,7 @@ var ovnis_array = new Array();
 var balasEnemigas_array = new Array();
 var disparoEnemigo;
 var enemigosVivos = 18;
-var tiempoDisparo = 700;
+var tiempoDisparo = 900;
 var id;
 var endGame = false;
 var totalBestScoresToShow = 5;
@@ -270,7 +270,7 @@ function reset() {
     balae.src = './images/fueguitoazul.png';
     enemigo.src = './images/bichofeo1.png';
     endGame = false;
-    tiempoDisparo = 700;
+    tiempoDisparo = 900;
     enemigosVivos = 18;
     puntos = 0;
     nivel = 0;
