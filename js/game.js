@@ -769,7 +769,8 @@ Realiza la fecha de la puntuacion final
 
 function getFinalScoreDate() {
     var date = new Date();
-    return fillZero(date.getDay() + 1) + '/' +
+    console.log(fillZero(date.getDate()));
+    return fillZero(date.getDate()) + '/' +
         fillZero(date.getMonth() + 1) + ' ' +
         fillZero(date.getHours()) + ':' +
         fillZero(date.getMinutes()) + ' ';
