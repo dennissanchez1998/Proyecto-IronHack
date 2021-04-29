@@ -16,8 +16,8 @@
             <div class="gameRules left">
                 <h3 class="gameRules__header">Las Reglas</h3>
                 <p class="gameRules__text">
-                    Los alinigenas han llegado tu eres un piloto del espacio el cual tienes que impedir que los diferentes tipos de alinigenas lleguen al planeta tierra escoge tu mejor nave y listo para defender nuestro hogar.
-                    <br/><br/> sobreviviendo a todas las oleadas de alinigenas seras catalogado como el heroe que salvo la tierra, obteniendo muchos premios.
+                    Los alienigenas han llegado tu eres un piloto del espacio el cual tienes que impedir que los diferentes tipos de alienigenas lleguen al planeta tierra escoge tu mejor nave y listo para defender nuestro hogar.
+                    <br/><br/> sobreviviendo a todas las oleadas de alienigenas seras catalogado como el héroe que salvo la tierra, obteniendo muchos premios.
                 </p>
 
                 <h3 class="gameRules__header">Controles</h3>
@@ -46,7 +46,7 @@
 
 
             <div class="gameRules right">
-                <h3 class="gameRules__header2">SCORE</h3>
+                <h3 class="gameRules__header2">TOP 5</h3>
                 <div class="derecha">
                     <h3 class="tituloPuntuaciones"></h3>
                     <ul id="puntuaciones"></ul>
@@ -99,8 +99,57 @@
 
         </div>
 
-        <div class="div-juego" id="CanvasJuego">
-            <canvas id="juego" height="560" width="800"></canvas>
+        <div id="perdiste" class="div-perdiste">
+            <div class="portada">
+                <div>
+                    <img src="./images/logo.png" alt="">
+
+                </div>
+            </div>
+
+            <div class="start">
+
+                <img src="./images/botonstart.png" alt="" style="height: 150px;" onclick="game.showLevelScreen()">
+
+            </div>
+
+            <div id="naves" class="inactivo">
+                <div class="ships">
+
+                    <img src="./images/imagen1.png" alt="NLO" class="nave1" id="nave1" onclick="game.nave(event)">
+
+                    <img src="./images/imagen2.png" alt="NLO2" class="nave2" id="nave2" onclick="game.nave(event)">
+
+                    <img src="./images/imagen3.png" alt="NLO3" class="nave3" id="nave3" onclick="game.nave(event)">
+
+                </div>
+
+                <div class="advantages">
+                    <div class="advantages__block">
+                        <h5 class=" controles__header">Nave 1</h5>
+
+                    </div>
+                    <div class="advantages__block">
+                        <h5 class=" controles__header">Nave 2</h5>
+
+                    </div>
+                    <div class="advantages__block">
+                        <h5 class=" controles__header">Nave 3</h5>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="div-juego prueba" id="CanvasJuego">
+            <canvas id="juego" height="560" width="800">
+
+
+
+            </canvas>
         </div>
 
 

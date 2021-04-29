@@ -13,11 +13,22 @@ let nave = new Image();
 nave.src = './images/imagen2.png';
 const espacio = new Image();
 espacio.src = './images/imagen4.jpg';
-const bala = new Image();
+let bala = new Image();
 bala.src = './images/bala3.png';
-
-const enemigo = new Image();
+let balae = new Image();
+balae.src = './images/fueguitoazul.png';
+let enemigo = new Image();
 enemigo.src = './images/bichofeo1.png';
+
+let ganaste = new Image();
+ganaste.src = './images/ganaste.png';
+let perdiste = new Image();
+perdiste.src = './images/perdiste.png';
+
+let btnInicio = new Image();
+btnInicio.src = './images/inicio.png';
+let btnVolver = new Image();
+btnVolver.src = './images/volver.png';
 
 
 
@@ -40,12 +51,19 @@ var balas_array = new Array();
 var ovnis_array = new Array();
 var balasEnemigas_array = new Array();
 var disparoEnemigo;
-var enemigosVivos = 50;
-var tiempoDisparo = 1000;
+var enemigosVivos = 18;
+var tiempoDisparo = 700;
 var id;
 var endGame = false;
 var totalBestScoresToShow = 5;
 var puntos = 0;
+var nivel = 0;
+var punto = 5
+var dificultad = 2;
+var trucos = 65;
+var trucos2 = 83;
+var trucos3 = 68;
+var truco = false;
 
 
 /* 
@@ -110,7 +128,7 @@ function getRandomNumber(range) {
     return Math.floor(Math.random() * range);
 }
 
-function Enemigo(x, y) {
+function Enemigo(x, y, img) {
     this.x = x;
     this.y = y;
     this.w = 60;
@@ -121,6 +139,7 @@ function Enemigo(x, y) {
     this.figura = true;
     this.vive = true;
     this.speed = 1
+    this.img = img
 
     this.prueba = false;
     this.dibuja = function() {
@@ -135,10 +154,10 @@ function Enemigo(x, y) {
                 this.dx = (this.dx > 0) ? this.dx++ : this.dx--;
             } else {
                 if (this.y >= canvas.height) {
-                    this.y = 0;
+                    gameOver()
                 }
                 this.x += this.dx;
-                this.y += 2;
+                this.y += dificultad;
             }
             this.veces++;
             this.ciclos = 0;
@@ -173,11 +192,20 @@ function Bala(x, y, w) {
         context.restore();
     };
     this.dispara = function() {
-        context.save();
-        context.fillStyle = "red";
-        context.fillRect(this.x, this.y, this.w, 20);
-        this.y = this.y + 4;
-        context.restore();
+
+        if (nivel === 0) {
+            context.save();
+            context.fillStyle = "red";
+            context.fillRect(this.x, this.y, this.w, 20);
+            this.y = this.y + 4;
+            context.restore();
+
+        } else {
+            context.drawImage(balae, this.x, this.y, 35, 35);
+
+            this.y = this.y + 4;
+        }
+
     };
 }
 
@@ -197,6 +225,42 @@ document.addEventListener("keydown", function(e) {
 document.addEventListener("keyup", function(e) {
     tecla[e.keyCode] = false;
 });
+document.addEventListener("click", function(e) {
+    console.log(e);
+    if ((e.x >= 585 && e.x <= 760) && endGame === true && enemigosVivos == 0 && (e.y >= 478 && e.y <= 540)) {
+        console.log("Ganaste");
+        reset();
+        game.inicio();
+    }
+
+    if ((e.x >= 585 && e.x <= 760) && endGame === true && enemigosVivos > 0 && (e.y >= 478 && e.y <= 540)) {
+        console.log("Perdiste");
+        reset();
+        startGame();
+    }
+});
+
+
+/* 
+*************************8
+Funcion que resetea los parametros
+***********************
+*/
+
+
+
+
+function reset() {
+    balae.src = './images/fueguitoazul.png';
+    enemigo.src = './images/bichofeo1.png';
+    endGame = false;
+    tiempoDisparo = 700;
+    enemigosVivos = 18;
+    puntos = 0;
+    nivel = 0;
+    punto = 5;
+    dificultad = 2;
+}
 
 /* **********
 Verifica las letras marcadas
@@ -219,6 +283,52 @@ function verifica(boton = false, codigo = 0) {
 
     if (x < 0) {
         x = 0;
+    }
+
+
+    /* 
+    ****************
+trucos para mostrar los diferentes niveles
+    ***************
+    
+    */
+    if (tecla[trucos]) {
+        if (nivel === 0) {
+            for (var i = 0; i < ovnis_array.length; i++) {
+                enemigo2 = ovnis_array[i];
+                enemigosVivos = 0;
+                ovnis_array[i] = null;
+                nivel = 1
+
+            }
+
+        }
+
+
+    }
+
+    if (tecla[trucos2]) {
+
+
+        for (var i = 0; i < ovnis_array.length; i++) {
+            enemigo2 = ovnis_array[i];
+            enemigosVivos = 0;
+            ovnis_array[i] = null;
+            nivel = 2
+            dificultad = 4
+            tiempoDisparo = 300;
+        }
+    }
+
+    if (tecla[trucos3]) {
+        for (var i = 0; i < ovnis_array.length; i++) {
+            enemigo2 = ovnis_array[i];
+            enemigosVivos = 0;
+            ovnis_array[i] = null;
+            gameOver()
+
+        }
+
     }
 
 
@@ -282,13 +392,10 @@ Aparecer OVNIS
 */
 function ovnis() {
 
-    if (ovnis_array <= 10) {
-
+    if (ovnis_array <= 10 && nivel === 0) {
         for (var i = 0; i <= 8; i++) {
-
             for (var j = 0; j <= 1; j++) {
-                ovnis_array.push(new Enemigo(10 + 80 * i, 10 + 55 * j));
-
+                ovnis_array.push(new Enemigo(10 + 80 * i, 10 + 55 * j, enemigo));
             }
             disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
         }
@@ -297,6 +404,39 @@ function ovnis() {
 
 
     }
+
+    if (ovnis_array <= 10 && nivel === 1) {
+        enemigo.src = './images/bichofeo5.png';
+        for (var i = 0; i <= 8; i++) {
+            disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
+            for (var j = 0; j <= 2; j++) {
+                ovnis_array.push(new Enemigo(10 + 80 * i, 10 + 55 * j));
+
+            }
+
+        }
+
+
+
+
+    }
+
+    if (ovnis_array <= 10 && nivel === 2) {
+        enemigo.src = './images/bichofeo6.png';
+        for (var i = 0; i <= 8; i++) {
+            for (var j = 0; j <= 4; j++) {
+                ovnis_array.push(new Enemigo(10 + 80 * i, 10 + 55 * j));
+
+            }
+
+        }
+        disparoEnemigo = setTimeout(disparaEnemigo, tiempoDisparo);
+
+
+
+
+    }
+
 
 }
 
@@ -325,11 +465,12 @@ const startGame = () => {
     if (endGame === false) {
         Bg.move();
         Bg.draw();
-
         prueba = new player(0);
         prueba.dibuja(x);
         ovnis();
-        colisiones()
+        if (truco === false) {
+            colisiones()
+        }
         verifica();
         pinta();
 
@@ -358,8 +499,35 @@ function colisiones() {
                     ovnis_array[i] = null;
                     balas_array[j] = null;
 
-                    puntos += 5;
+                    puntos += punto;
+                    if (enemigosVivos === 0 && nivel === 0) {
+                        nivel += 1;
+                        enemigosVivos = 27;
+                        punto = 10;
+                    }
+                    if (enemigosVivos === 0 && nivel === 1) {
+                        nivel = 2
+                        enemigosVivos = 45;
+                        punto = 30;
+                        dificultad = 4
+                        tiempoDisparo = 300;
+                    }
+                    if (enemigosVivos === 0 && nivel === 2) {
+                        gameOver();
+                    }
                 }
+            }
+        }
+    }
+
+    for (var j = 0; j < ovnis_array.length; j++) {
+        ovnis2 = ovnis_array[j];
+        if (ovnis2 != null) {
+            if ((ovnis2.x >= prueba.x) &&
+                (ovnis2.x <= prueba.x + prueba.w) &&
+                (ovnis2.y >= prueba.y) &&
+                (ovnis2.y <= prueba.y + prueba.h)) {
+                gameOver();
             }
         }
     }
@@ -408,11 +576,14 @@ function gameOver() {
     saveFinalScore()
     balas_array = [];
     ovnis_array = [];
+
     balasEnemigas_array = [];
     if (enemigosVivos == 0) {
-        mensaje("GANASTE");
+        context.drawImage(ganaste, 150, 20, 500, 300);
+        context.drawImage(btnInicio, 295, 300, 200, 100);
     } else {
-        mensaje("GAME OVER");
+        context.drawImage(perdiste, 150, 20, 500, 300);
+        context.drawImage(btnVolver, 295, 300, 200, 100);
     }
     endGame = true;
     clearTimeout(disparoEnemigo);
@@ -456,25 +627,56 @@ function disparaEnemigo() {
 startGame(); */
 
 
+/* 
+funcion para comenzar el juego
 
+*/
 
 var game = {
+
+
+    /* 
+    **********************
+    BTN START GAME
+    *****************
+    */
+
+    inicio: function() {
+
+        let juegoI = document.getElementsByClassName("prueba");
+        let navesI = document.getElementById('naves')
+        let startI = document.getElementsByClassName("start");
+        let inicioI = document.getElementById('inicio')
+        inicioI.style.display = "block";
+        startI[0].style.display = "flex"
+        navesI.style.display = "none"
+
+        juegoI[0].classList.add('div-juego');
+    },
+
+
+    /* 
+    **********************
+    BTN START GAME
+    *****************
+    */
 
     showLevelScreen: function() {
 
 
         let naves = document.getElementById('naves')
         let start = document.getElementsByClassName("start");
-
         let inicio = document.getElementById('inicio')
-
         start[0].style.display = "none"
-
-
-
         naves.style.display = "block"
     },
 
+
+    /* 
+    ***********************
+    BTN SELECCION DE NAVE
+    ***********************
+    */
 
     nave: function(event) {
         let juego = document.getElementsByClassName("div-juego");
@@ -486,8 +688,6 @@ var game = {
                 nave.src = './images/imagen1.png';
                 inicio.style.display = "none";
                 juego[0].classList.remove('div-juego');
-
-
                 startGame();
 
                 break;
