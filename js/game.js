@@ -520,13 +520,14 @@ function colisiones() {
                         nivel += 1;
                         enemigosVivos = 27;
                         punto = 10;
+                        tiempoDisparo = 800;
                     }
                     if (enemigosVivos === 0 && nivel === 1) {
                         nivel = 2
                         enemigosVivos = 45;
                         punto = 30;
                         dificultad = 4
-                        tiempoDisparo = 300;
+                        tiempoDisparo = 500;
                     }
                     if (enemigosVivos === 0 && nivel === 2) {
                         gameOver();
