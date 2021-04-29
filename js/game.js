@@ -30,6 +30,12 @@ btnInicio.src = './images/inicio.png';
 let btnVolver = new Image();
 btnVolver.src = './images/volver.png';
 
+const startBtn = {
+    x: 295,
+    y: 300,
+    w: 200,
+    h: 100
+}
 
 
 
@@ -225,19 +231,29 @@ document.addEventListener("keydown", function(e) {
 document.addEventListener("keyup", function(e) {
     tecla[e.keyCode] = false;
 });
-document.addEventListener("click", function(e) {
-    console.log(e);
-    if ((e.x >= 585 && e.x <= 760) && endGame === true && enemigosVivos == 0 && (e.y >= 478 && e.y <= 540)) {
+document.addEventListener("click", function(evt) {
+    console.log(evt);
+
+
+    let rect = canvas.getBoundingClientRect(); // OBTIENE DE RETORNO EL TAMAÑO DEL ELEMENTO Y SU POSICIÓN AL VIEWPORT, ES DECIR EL CANVAS *
+    let clickX = evt.clientX - rect.left;
+    let clickY = evt.clientY - rect.top;
+
+
+
+    // SI LLEGÓ A ATINARLE AL START BUTTON...
+    if (clickX >= startBtn.x && clickX <= startBtn.x + startBtn.w && clickY >= startBtn.y && clickY <= startBtn.y + startBtn.h && endGame === true && enemigosVivos == 0) {
         console.log("Ganaste");
         reset();
         game.inicio();
     }
-
-    if ((e.x >= 585 && e.x <= 760) && endGame === true && enemigosVivos > 0 && (e.y >= 478 && e.y <= 540)) {
+    if (clickX >= startBtn.x && clickX <= startBtn.x + startBtn.w && clickY >= startBtn.y && clickY <= startBtn.y + startBtn.h && endGame === true && enemigosVivos > 0) {
         console.log("Perdiste");
         reset();
         startGame();
     }
+
+
 });
 
 
